@@ -8,6 +8,7 @@ from chatbot_helpers import (
     load_chatbot_tables,
     retrieve_relevant_context,
     generate_llm_answer,
+    generate_direct_answer,
 )
 
 
@@ -858,8 +859,15 @@ with tab_chatbot:
         with st.chat_message("assistant"):
             with st.spinner("IPOSA is analyzing the retrieved data..."):
                 try:
-                    answer = generate_llm_answer(question, context)
+                    direct_answer = generate_direct_answer(question, tables)
+
+                    if direct_answer:
+                        answer = direct_answer
+                    else:
+                        answer = generate_llm_answer(question, context)
+
                     st.write(answer)
+                    
                 except Exception as error:
                     st.error(
                         "The LLM answer could not be generated. "
