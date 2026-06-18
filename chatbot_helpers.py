@@ -182,13 +182,26 @@ def generate_direct_answer(question, tables):
         )
 
     if "factory" in q and "better oee" in q:
-        df = tables["factory_kpis"]
-        row = df.loc[df["oee"].idxmax()]
+        df = tables["factory_kpis"].copy()
+        df = df.sort_values("oee", ascending=False)
 
-        return (
-            f"Factory {row['factory_id']} has the better OEE.\n\n"
-            f"- OEE: {row['oee']:.4f} ({row['oee'] * 100:.2f}%)"
+        best_factory = df.iloc[0]
+
+        answer = (
+            f"Factory {best_factory['factory_id']} has the better OEE "
+            f"compared to the other factory in the dataset.\n\n"
         )
+
+        for _, row in df.iterrows():
+            answer += (
+                f"- Factory {row['factory_id']}: "
+                f"OEE {row['oee'] * 100:.2f}%, "
+                f"Availability {row['availability'] * 100:.2f}%, "
+                f"Performance {row['performance'] * 100:.2f}%, "
+                f"Quality {row['quality'] * 100:.2f}%\n"
+            )
+
+        return answer
 
     if "how many anomalies" in q or "anomalies were detected" in q:
         df = tables["anomaly_summary"]
