@@ -190,6 +190,9 @@ def generate_direct_answer(question, tables):
         answer = (
             f"Factory {best_factory['factory_id']} has the better OEE "
             f"compared to the other factory in the dataset.\n\n"
+            f"Overall Equipment Effectiveness (OEE) is calculated as "
+            f"Availability x Performance x Quality. "
+            f"The component values are shown to make the result transparent.\n\n"
         )
 
         for _, row in df.iterrows():
