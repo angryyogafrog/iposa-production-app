@@ -1,0 +1,5 @@
+cluster_id,cluster_name,event_count,avg_oee,avg_availability,avg_performance,avg_quality,avg_downtime_rate,avg_scrap_rate,avg_setup_rate,avg_cycle_time_loss_rate,event_share
+1,normal / low-loss production,5829,0.897,0.9476,0.9635,0.9825,0.0513,0.0175,0.0225,0.0283,0.2957
+2,high setup losses,5615,0.8736,0.9468,0.9529,0.9682,0.0513,0.0318,0.0356,0.0283,0.2849
+0,cycle-time and downtime losses,4614,0.78,0.9252,0.866,0.9736,0.073,0.0264,0.0241,0.1264,0.2341
+3,quality and combined losses,3652,0.7499,0.9248,0.8519,0.9518,0.0725,0.0482,0.036,0.12,0.1853

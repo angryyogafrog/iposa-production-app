@@ -1,0 +1,5 @@
+scenario,changed_feature,change_percent,rows_used,baseline_predicted_oee,scenario_predicted_oee,oee_change,oee_change_percentage_points
+downtime rate reduced by 10%,downtime_rate,-10,19710,0.835683,0.841624,0.005941,0.594087
+cycle-time loss rate reduced by 10%,cycle_time_loss_rate,-10,19710,0.835683,0.841289,0.005606,0.560604
+scrap rate reduced by 10%,scrap_rate,-10,19710,0.835683,0.840481,0.004798,0.479819
+setup rate reduced by 10%,setup_rate,-10,19710,0.835683,0.835697,1.4e-05,0.001403
