@@ -146,3 +146,69 @@ Retrieved data context:
     )
 
     return response.output_text
+def generate_direct_answer(question, tables):
+    q = question.lower()
+
+    if ("highest oee" in q) and (
+        "product-line" in q or "product line" in q or "prod-line" in q or "route" in q
+    ):
+        df = tables["route_kpis"]
+        row = df.loc[df["oee"].idxmax()]
+
+        return (
+            f"The product-line route with the highest OEE is "
+            f"factory {row['factory_id']}, line {row['line_id']}, product {row['product_id']}.\n\n"
+            f"- OEE: {row['oee']:.4f} ({row['oee'] * 100:.2f}%)\n"
+            f"- Availability: {row['availability']:.4f}\n"
+            f"- Performance: {row['performance']:.4f}\n"
+            f"- Quality: {row['quality']:.4f}"
+        )
+
+    if "line" in q and "highest downtime" in q:
+        df = tables["route_kpis"]
+
+        line_summary = (
+            df.groupby(["factory_id", "line_id"], as_index=False)["downtime_total_min"]
+            .sum()
+            .sort_values("downtime_total_min", ascending=False)
+        )
+
+        row = line_summary.iloc[0]
+
+        return (
+            f"The line with the highest total downtime is "
+            f"factory {row['factory_id']}, line {row['line_id']}.\n\n"
+            f"- Total downtime: {row['downtime_total_min']:,.2f} minutes"
+        )
+
+    if "factory" in q and "better oee" in q:
+        df = tables["factory_kpis"]
+        row = df.loc[df["oee"].idxmax()]
+
+        return (
+            f"Factory {row['factory_id']} has the better OEE.\n\n"
+            f"- OEE: {row['oee']:.4f} ({row['oee'] * 100:.2f}%)"
+        )
+
+    if "how many anomalies" in q or "anomalies were detected" in q:
+        df = tables["anomaly_summary"]
+        row = df[df["anomaly_label"] == "anomaly"].iloc[0]
+
+        return (
+            f"The anomaly detection identified {int(row['event_count']):,} anomalous production events.\n\n"
+            f"- Share of all events: {row['event_share'] * 100:.2f}%\n"
+            f"- Average OEE of anomalies: {row['avg_oee'] * 100:.2f}%"
+        )
+
+    if "production is redistributed" in q or "redistributed" in q:
+        df = tables["optimization_summary"]
+        row = df.iloc[0]
+
+        return (
+            f"The optimization redistributes {row['redistributed_units']:,.0f} production units.\n\n"
+            f"- Redistributed share: {row['redistributed_share'] * 100:.2f}%\n"
+            f"- Current weighted OEE: {row['current_weighted_oee'] * 100:.2f}%\n"
+            f"- Optimized weighted OEE: {row['optimized_weighted_oee'] * 100:.2f}%"
+        )
+
+    return None
